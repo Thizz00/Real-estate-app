@@ -11,8 +11,6 @@ HEADERS = {'User-Agent': 'Chrome'}
 # Timeouts for every scrap
 TIMEOUT = 20
 
-#Folder path
-FOLDER_PATH = 'data/scraped_numbers_sms'
 
 #logs EXISTS
 
@@ -24,3 +22,5 @@ log_file_path = os.path.join(LOG_DIR, LOG_FILE_NAME)
 
 logging.basicConfig(level=logging.INFO, filename=log_file_path, format='%(asctime)s [%(levelname)s]: %(message)s')
 
+#Semaphore 
+SEMAPHORE_LIMIT = 100 
