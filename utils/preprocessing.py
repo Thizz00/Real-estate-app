@@ -5,15 +5,14 @@ from src.otodom_scraper import main_otodom_sale
 from config.otodom_config import FOLDER_PATH_OTODOM
 from datetime import datetime
 
-FOLDER_PATH_OTODOM = "ścieżka/do/folderu"
-
 def create_folder_if_not_exists(folder_path):
     if not os.path.exists(folder_path):
         os.makedirs(folder_path)
 
+
 def save_data_to_excel(data_list, file_path):
     df = pd.DataFrame(data_list)
-    df.to_excel(file_path, index=False)
+    #df.to_excel(file_path, index=False)
     return df
 
 def get_sale_path(folder_path, number, formatted_date):
