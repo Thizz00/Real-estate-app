@@ -1,0 +1,35 @@
+#Links
+OTODOM_LINK_SALE = "https://www.otodom.pl/pl/wyniki/sprzedaz/mieszkanie{option_market_type}/{selected_option_city}?limit=24&ownerTypeSingleSelect={optiontype}&daysSinceCreated={number}&areaMax={area}&by=DEFAULT&direction=DESC&viewType=listing"
+URL_JOIN = 'https://www.otodom.pl'
+
+#Elements
+NUM_PAGES_TAG = 'li' 
+NUM_PAGES_CLASS = 'css-1tospdx'
+LINK_DIV_TAG = 'ul'
+LINK_DIV_CLASS = 'css-rqwdxd e127mklk0'
+LINK_TAG = 'a'
+BUTTON_COOKIES_ID = 'onetrust-accept-btn-handler'
+BUTTON_PHONE_NUMBER_CSS_SELECTOR = 'eawon7u1.css-1wbunhv.e1rtjcnh0'#
+DIV_PHONE_NUMBER_CSS_SELECTOR = 'css-1g26sdq'
+DATE_ADDED_CLASS_NAME = 'css-1soi3e7.e4mhl2h4'
+DATE_UPDATED_CLASS_NAME = 'css-9dilgw.e4mhl2h5'
+ADRESS_CLASS = 'eozeyij0 css-1helwne e1p0dzoz0'
+PRICE_CLASS = 'css-t3wmkv e9aa0kv0'
+CATEGORY_CLASS_TO_SEARCH = 'css-1qzszy5 e26jmad2'
+
+#Folder path otodom
+FOLDER_PATH_OTODOM = 'data/otodom'
+
+#Keys to search
+KEYS = [
+        'Powierzchnia', 'Forma własności', 'Liczba pokoi', 'Stan wykończenia',
+        'Balkon / ogród / taras', 'Piętro', 'Czynsz', 'Miejsce parkingowe', 'Ogrzewanie',
+        'Rynek', 'Typ ogłoszeniodawcy', 'Dostępne od', 'Rok budowy', 'Rodzaj zabudowy',
+        'Winda', 'Media', 'Zabezpieczenia', 'Informacje dodatkowe',
+        'Materiał budynku', 'Wyposażenie', 'Okna', 'Certyfikat energetyczny', 'Obsługa zdalna',
+        'Rozpoczęcie budowy', 'Liczba kondygnacji', 'Stan inwestycji', 'Wyokość pomieszczeń',
+        'Bezpieczeństwo', 'Udogodnienia', 'Powierzchnie dodatkowe', 'Wysokość pomieszczeń'
+        ]
+
+#Semaphore 
+SEMAPHORE_LIMIT = 100 
