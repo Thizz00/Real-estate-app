@@ -1,5 +1,6 @@
 #Links olx
-OLX_LINK_SALE = "https://www.olx.pl/nieruchomosci/mieszkania/krakow/?page={page_number}&search%5Border%5D=created_at:desc"
+OLX_LINK_SALE_ALL = "https://www.olx.pl/nieruchomosci/mieszkania/sprzedaz/{selected_option_city}/?page={page_number}"
+OLX_LINK_SALE = "https://www.olx.pl/nieruchomosci/mieszkania/sprzedaz/{selected_option_city}/?page={page_number}&search%{selected_option_type}"
 URL_JOIN = "https://www.olx.pl/"
 
 #Elements olx

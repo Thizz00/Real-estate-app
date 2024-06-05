@@ -13,41 +13,36 @@ logging.basicConfig(level=logging.INFO, filename=log_file_path, format='%(asctim
 
 semaphore = asyncio.Semaphore(SEMAPHORE_LIMIT)
 
-async def fetch_html(url, session):
+async def get_num_pages_sale(selected_option_city,selected_option_type):
+    if selected_option_type == 'All':
+        url = OLX_LINK_SALE_ALL.format(page_number=2,selected_option_city = selected_option_city)
+    else:
+        url = OLX_LINK_SALE.format(page_number=2,selected_option_city = selected_option_city,selected_option_type = selected_option_type)
+    
     try:
-        async with session.get(url) as response:
-            response.raise_for_status()
-            return await response.text()
-    except aiohttp.ClientError as e:
-        logging.error(f"Error fetching HTML from {url}: {e}")
-        return None
-
-async def get_num_pages_sale(session):
-    url = OLX_LINK_SALE
-    try:
-        html = await fetch_html(url, session)
-        if html:
-            soup = BeautifulSoup(html, 'html.parser')
-            num_pages_element = soup.find_all(NUM_PAGES_TAG, class_=NUM_PAGES_CLASS)[-1]
-            if num_pages_element and num_pages_element.text.isdigit():
-                return int(num_pages_element.text)
-            else:
-                logging.warning("Could not find num_pages on the page or it's not a number")
+        async with aiohttp.ClientSession() as session:
+            async with session.get(
+                    url,
+                    headers=HEADERS,
+                    timeout=TIMEOUT,
+                ) as response:
+                    if response.status == 200:
+                        soup = BeautifulSoup(await response.text(), 'html.parser')
+                        num_pages_element = soup.find_all(NUM_PAGES_TAG, class_=NUM_PAGES_CLASS)[-1]
+                        if num_pages_element and num_pages_element.text.isdigit():
+                            return int(num_pages_element.text)
+                        else:
+                            logging.warning("Could not find num_pages on the page or it's not a number")
+                            return 1
+                    else:
+                        logging.warning(f"Failed to fetch {url} - Status code: {response.status}")
+                        return 1
     except Exception as e:
         logging.error(f"Error while fetching {url}: {e}")
-    return 1
+        return 1
 
-async def fetch_links_from_page_sale(session, link):
-    try:
-        html = await fetch_html(link, session)
-        if html:
-            return await parse_links_sale(html)
-    except Exception as e:
-        logging.error(f"Error while fetching link {link}: {e}")
-    return set()
-
-async def parse_links_sale(html):
-    soup = BeautifulSoup(html, 'html.parser')
+async def parse_links_sale(response):
+    soup = BeautifulSoup(await response.text(), 'html.parser')
     divs = soup.find_all(LINK_DIV_TAG, class_=LINK_DIV_CLASS)
     links = set()
     for div in divs:
@@ -57,12 +52,26 @@ async def parse_links_sale(html):
             absolute_url = urljoin(OLX_LINK_SALE, href)
             if URL_JOIN in absolute_url:
                 links.add(absolute_url)
-                logging.info(f"Successfully fetched URL {absolute_url}")
+                logging.info(f"Successfully fetched {absolute_url}")
     return links
 
-async def fetch_page_sale(session, page_number):
-    link = OLX_LINK_SALE.format(page_number=page_number)
-    return await fetch_links_from_page_sale(session, link)
+async def fetch_links_from_page_sale(page_number,selected_option_city,selected_option_type):
+    if selected_option_type == 'All':
+        link = OLX_LINK_SALE_ALL.format(page_number=page_number,selected_option_city = selected_option_city)
+    else:
+        link = OLX_LINK_SALE.format(page_number=page_number,selected_option_city = selected_option_city,selected_option_type = selected_option_type)
+    try:
+        async with aiohttp.ClientSession() as session:
+            async with session.get(link, headers=HEADERS, timeout=TIMEOUT) as response:
+                if response.status == 200:
+                    return await parse_links_sale(response)
+                else:
+                    logging.warning(f"Failed to fetch link {link} - Status code: {response.status}")
+                    return set()
+    except Exception as e:
+        logging.error(f"Error while fetching link {link}: {type(e).__name__} - {str(e)}", exc_info=True)
+        return set()
+    
 
 async def scrap_data_olx_sale(link):
     async with aiohttp.ClientSession() as session:
@@ -102,15 +111,12 @@ async def scrap_data_olx_sale(link):
         except Exception as e:
             logging.error(f"Error while scraping data from link {link}: {type(e).__name__} - {str(e)}", exc_info=True)
 
-async def main_olx_sale():
+async def main_olx_sale(selected_option_city,selected_option_type):
     results_scrape_data = []
     try:
-        async with aiohttp.ClientSession() as session:
-
-            num_pages = await get_num_pages_sale(session)
-            tasks = [fetch_page_sale(session, i) for i in range(1, num_pages + 1)]
+            num_pages = await get_num_pages_sale(selected_option_city,selected_option_type)
+            tasks = [fetch_links_from_page_sale(i,selected_option_city,selected_option_type) for i in range(1, num_pages + 1)]
             results = await asyncio.gather(*tasks)
-
             scraped_links = set().union(*results)
             logging.info(f"Successfully fetched {len(scraped_links)} URLs")
             for link in scraped_links:
@@ -124,3 +130,4 @@ async def main_olx_sale():
     except Exception as e:
         logging.error(f"Error in main_olx: {type(e).__name__} - {str(e)}", exc_info=True)
         return []
+

@@ -16,11 +16,31 @@ st.markdown("""
   }
   </style>""", unsafe_allow_html=True)
 
-if st.button("Start Scraping"):
-    with st.spinner("In progress..."):
-        df_olx = scrap_data_sale_olx()
-    if df_olx is not None:
-        st.dataframe(df_olx, column_config={"Link": st.column_config.LinkColumn()}, hide_index=False)
-    else:
-        st.warning("No data available.")
+type_display_city = {
+    "krakow": "Kraków",
+    "warszawa": "Warszawa",
+    "wroclaw": "Wrocław",
+    "poznan": "Poznań",
+    "rzeszow": "Rzeszów",
+    "katowice": "Katowice",
+    "lodz": "Łódź"
+}
+type_display_names = {
+    'All': 'All advertisers',
+    '5Bprivate_business%5D=business': 'Developers and Real estate offices',
+    '5Bprivate_business%5D=private': 'Individuals'
+}
+
+city_type = st.selectbox("Select city", list(type_display_city.values()), index=0)
+option_type = st.selectbox("Select type", list(type_display_names.values()), index=0)
+if city_type and option_type:
+  selected_option_city = next(key for key, value in type_display_city.items() if value == city_type)
+  selected_option_type = next(key for key, value in type_display_names.items() if value == option_type)
+  if st.button("Start Scraping"):
+      with st.spinner("In progress..."):
+          df_olx = scrap_data_sale_olx(selected_option_city,selected_option_type)
+      if df_olx is not None:
+          st.dataframe(df_olx, column_config={"Link": st.column_config.LinkColumn()}, hide_index=False)
+      else:
+          st.warning("No data available.")
 
