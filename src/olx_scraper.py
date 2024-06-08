@@ -11,13 +11,15 @@ from config.olx_config import *
 
 logging.basicConfig(level=logging.INFO, filename=log_file_path, format='%(asctime)s [%(levelname)s]: %(message)s')
 
-semaphore = asyncio.Semaphore(SEMAPHORE_LIMIT)
+#semaphore = asyncio.Semaphore(SEMAPHORE_LIMIT)
 
-async def get_num_pages_sale(selected_option_city,selected_option_type):
-    if selected_option_type == 'All':
+async def get_num_pages_sale(selected_option_city,selected_option_type,selected_market_type):
+    if selected_option_type == 'All' and selected_market_type == 'All':
         url = OLX_LINK_SALE_ALL.format(page_number=2,selected_option_city = selected_option_city)
+    if selected_option_type == 'All' and selected_market_type != 'All':
+        url = OLX_LINK_SALE_ALL_CUSTOM.format(page_number=2,selected_option_city = selected_option_city, selected_market_type = selected_market_type)
     else:
-        url = OLX_LINK_SALE.format(page_number=2,selected_option_city = selected_option_city,selected_option_type = selected_option_type)
+        url = OLX_LINK_SALE.format(page_number=2,selected_option_city = selected_option_city,selected_option_type = selected_option_type,selected_market_type = selected_market_type)
     
     try:
         async with aiohttp.ClientSession() as session:
@@ -55,11 +57,14 @@ async def parse_links_sale(response):
                 logging.info(f"Successfully fetched {absolute_url}")
     return links
 
-async def fetch_links_from_page_sale(page_number,selected_option_city,selected_option_type):
-    if selected_option_type == 'All':
+async def fetch_links_from_page_sale(page_number,selected_option_city,selected_option_type,selected_market_type):
+
+    if selected_option_type == 'All' and selected_market_type == 'All':
         link = OLX_LINK_SALE_ALL.format(page_number=page_number,selected_option_city = selected_option_city)
+    if selected_option_type == 'All' and selected_market_type != 'All':
+        link = OLX_LINK_SALE_ALL_CUSTOM.format(page_number=page_number,selected_option_city = selected_option_city, selected_market_type = selected_market_type)
     else:
-        link = OLX_LINK_SALE.format(page_number=page_number,selected_option_city = selected_option_city,selected_option_type = selected_option_type)
+        link = OLX_LINK_SALE.format(page_number=page_number,selected_option_city = selected_option_city,selected_option_type = selected_option_type,selected_market_type = selected_market_type)
     try:
         async with aiohttp.ClientSession() as session:
             async with session.get(link, headers=HEADERS, timeout=TIMEOUT) as response:
@@ -111,11 +116,11 @@ async def scrap_data_olx_sale(link):
         except Exception as e:
             logging.error(f"Error while scraping data from link {link}: {type(e).__name__} - {str(e)}", exc_info=True)
 
-async def main_olx_sale(selected_option_city,selected_option_type):
+async def main_olx_sale(selected_option_city,selected_option_type,selected_market_type):
     results_scrape_data = []
     try:
-            num_pages = await get_num_pages_sale(selected_option_city,selected_option_type)
-            tasks = [fetch_links_from_page_sale(i,selected_option_city,selected_option_type) for i in range(1, num_pages + 1)]
+            num_pages = await get_num_pages_sale(selected_option_city,selected_option_type,selected_market_type)
+            tasks = [fetch_links_from_page_sale(i,selected_option_city,selected_option_type,selected_market_type) for i in range(1, num_pages + 1)]
             results = await asyncio.gather(*tasks)
             scraped_links = set().union(*results)
             logging.info(f"Successfully fetched {len(scraped_links)} URLs")

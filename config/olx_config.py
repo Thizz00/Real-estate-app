@@ -1,6 +1,7 @@
 #Links olx
 OLX_LINK_SALE_ALL = "https://www.olx.pl/nieruchomosci/mieszkania/sprzedaz/{selected_option_city}/?page={page_number}"
-OLX_LINK_SALE = "https://www.olx.pl/nieruchomosci/mieszkania/sprzedaz/{selected_option_city}/?page={page_number}&search%{selected_option_type}"
+OLX_LINK_SALE_ALL_CUSTOM = "https://www.olx.pl/nieruchomosci/mieszkania/sprzedaz/{selected_option_city}/?page={page_number}&search%{selected_market_type}"
+OLX_LINK_SALE = "https://www.olx.pl/nieruchomosci/mieszkania/sprzedaz/{selected_option_city}/?page={page_number}&search%{selected_option_type}&search%{selected_market_type}"
 URL_JOIN = "https://www.olx.pl/"
 
 #Elements olx

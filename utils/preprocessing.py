@@ -43,10 +43,10 @@ def get_sale_path_olx(folder_path,formatted_date):
     return f'{folder_path}//olx_sale_{formatted_date}.xlsx'
 
 
-def scrap_data_sale_olx(selected_option_city,selected_option_type):
+def scrap_data_sale_olx(selected_option_city,selected_option_type,selected_market_type):
     today_date = datetime.today()
     formatted_date = today_date.strftime("%Y-%m-%d-%H-%M")
-    result_olx_sale = asyncio.run(main_olx_sale(selected_option_city,selected_option_type))
+    result_olx_sale = asyncio.run(main_olx_sale(selected_option_city,selected_option_type,selected_market_type))
     result_olx_sale_filtered = [result for result in result_olx_sale if result is not None]
     if result_olx_sale_filtered:
         updated_data_list = [{key: value if value is not None and value != '' else 'No data' for key, value in item.items()} for item in result_olx_sale_filtered]
