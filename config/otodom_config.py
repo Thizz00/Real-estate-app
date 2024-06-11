@@ -30,6 +30,3 @@ KEYS = [
         'Rozpoczęcie budowy', 'Liczba kondygnacji', 'Stan inwestycji', 'Wyokość pomieszczeń',
         'Bezpieczeństwo', 'Udogodnienia', 'Powierzchnie dodatkowe', 'Wysokość pomieszczeń'
         ]
-
-#Semaphore 
-SEMAPHORE_LIMIT = 100 
