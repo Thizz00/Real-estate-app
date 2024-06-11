@@ -9,6 +9,9 @@ Application that allows you to scrap information about announcements of current 
 * https://www.olx.pl
 * https://www.otodom.pl
 
+## Cloud streamlit
+
+Test applications via cloud streamlit: https://real-estate-app-poland.streamlit.app
 
 ## Run Locally
 
