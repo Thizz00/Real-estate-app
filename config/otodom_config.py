@@ -1,5 +1,5 @@
 #Links
-OTODOM_LINK_SALE = "https://www.otodom.pl/pl/wyniki/sprzedaz/mieszkanie{option_market_type}/{selected_option_city}?limit=24&ownerTypeSingleSelect={optiontype}&daysSinceCreated={number}&areaMax={area}&by=DEFAULT&direction=DESC&viewType=listing"
+OTODOM_LINK_SALE = "https://www.otodom.pl/pl/wyniki/sprzedaz/mieszkanie{option_market_type}/{selected_option_city}?limit=24&ownerTypeSingleSelect={optiontype}&areaMax={area}&daysSinceCreated={number}&by=DEFAULT&direction=DESC&viewType=listing"
 URL_JOIN = 'https://www.otodom.pl'
 
 #Elements
