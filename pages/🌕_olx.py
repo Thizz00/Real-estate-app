@@ -1,7 +1,7 @@
 import streamlit as st
 from utils.preprocessing import scrap_data_sale_olx
 
-st.markdown("<h1 style='text-align: center; color: white;'>Scraper Otodom</h1>", unsafe_allow_html=True)
+st.markdown("<h1 style='text-align: center; color: white;'>Scraper Olx</h1>", unsafe_allow_html=True)
 st.markdown("""
   <style>
   div.stButton {text-align:center}
