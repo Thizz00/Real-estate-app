@@ -17,6 +17,7 @@ async def parse_link_to_get_num_pages_for_firstsite(selected_option_city,option_
     formatted_url = base_url.format(
         selected_option_city = selected_option_city,option_market_type=option_market_type, optiontype=option_type, number=number, area=area
     )
+    print(formatted_url)
     return formatted_url
 
 
@@ -32,6 +33,7 @@ async def get_num_pages(selected_option_city,option_market_type, option_type, ar
                     soup = BeautifulSoup(await response.text(), 'html.parser')
                     num_pages_element = soup.find_all(NUM_PAGES_TAG, class_=NUM_PAGES_CLASS)[-1]
                     if num_pages_element and num_pages_element.text.isdigit():
+                        print(int(num_pages_element.text))
                         return int(num_pages_element.text)
                     else:
                         logging.warning("Could not find num_pages on the page or it's not a number")
@@ -84,7 +86,7 @@ async def fetch_page_sale(selected_option_city,page_number, number, option_type,
     return await fetch_links_from_page_sale(formatted_url)
 
 
-async def scrap_data_otodom_sale(link):
+async def scrap_data_otodom_sale(link,semaphore):
     async with semaphore: 
         async with aiohttp.ClientSession() as session:
             try:
@@ -128,13 +130,14 @@ async def scrap_data_otodom_sale(link):
                 logging.error(f"Error while scraping data from link {link}: {type(e).__name__} - {str(e)}", exc_info=True)
 
 
-async def main_otodom_sale(selected_option_city,number, option_type, option_market_type, area):
+async def main_otodom_sale(selected_option_city, number, option_type, option_market_type, area):
+    semaphore = asyncio.Semaphore(SEMAPHORE_LIMIT)
     try:
-        num_pages = await get_num_pages(selected_option_city,option_market_type, option_type, area, number)
-        tasks = [fetch_page_sale(selected_option_city,i, number, option_type, option_market_type, area) for i in range(1, num_pages + 1)]
+        num_pages = await get_num_pages(selected_option_city, option_market_type, option_type, area, number)
+        tasks = [fetch_page_sale(selected_option_city, i, number, option_type, option_market_type, area) for i in range(1, num_pages + 1)]
         scraped_links = set().union(*await asyncio.gather(*tasks))
         logging.info(f"Successfully fetched {len(scraped_links)} URLs")
-        results_scrape_data = await asyncio.gather(*[scrap_data_otodom_sale(link) for link in scraped_links])
+        results_scrape_data = await asyncio.gather(*[scrap_data_otodom_sale(link, semaphore) for link in scraped_links])
         logging.info(f"Scraped: {len(results_scrape_data)} out of: {len(scraped_links)}")
         return results_scrape_data
     except Exception as e:
