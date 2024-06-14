@@ -31,7 +31,6 @@ async def get_num_pages_sale(selected_option_city,selected_option_type,selected_
                         soup = BeautifulSoup(await response.text(), 'html.parser')
                         num_pages_element = soup.find_all(NUM_PAGES_TAG, class_=NUM_PAGES_CLASS)[-1]
                         if num_pages_element and num_pages_element.text.isdigit():
-                            print(int(num_pages_element.text))
                             return int(num_pages_element.text)
                         else:
                             logging.warning("Could not find num_pages on the page or it's not a number")
