@@ -11,15 +11,21 @@ from config.olx_config import *
 
 logging.basicConfig(level=logging.INFO, filename=log_file_path, format='%(asctime)s [%(levelname)s]: %(message)s')
 
-async def get_num_pages_sale(selected_option_city,selected_option_type,selected_market_type,selected_area):
-    if selected_option_type == 'All' and selected_market_type == 'All':
-        link = OLX_LINK_SALE_ALL.format(page_number=2,selected_option_city = selected_option_city,selected_area = selected_area)
-    elif selected_option_type == 'All' and selected_market_type != 'All':
-        link = OLX_LINK_SALE_ALL_CUSTOM.format(page_number=2,selected_option_city = selected_option_city, selected_market_type = selected_market_type, selected_area = selected_area)
-    elif selected_option_type != 'All' and selected_market_type == 'All':
-        link = OLX_LINK_SALE_MARKET_TYPE_ALL.format(page_number=2,selected_option_city = selected_option_city,selected_area = selected_area,selected_option_type = selected_option_type)
-    else:
-        link= OLX_LINK_SALE.format(page_number=2,selected_option_city = selected_option_city,selected_option_type = selected_option_type,selected_market_type = selected_market_type,selected_area = selected_area)
+async def get_num_pages(offer_type,selected_option_city,selected_option_type,selected_market_type,selected_area):
+    if offer_type == 'Rent':
+        if selected_option_type == 'All':
+            link = OLX_LINK_RENT_ALL.format(page_number=2,selected_option_city = selected_option_city,selected_area = selected_area)
+        else:
+            link = OLX_LINK_RENT.format(page_number=2,selected_option_city = selected_option_city,selected_option_type = selected_option_type,selected_area = selected_area)
+    if offer_type == 'Sale':    
+        if selected_option_type == 'All' and selected_market_type == 'All':
+            link = OLX_LINK_SALE_ALL.format(page_number=2,selected_option_city = selected_option_city,selected_area = selected_area)
+        elif selected_option_type == 'All' and selected_market_type != 'All':
+            link = OLX_LINK_SALE_ALL_CUSTOM.format(page_number=2,selected_option_city = selected_option_city, selected_market_type = selected_market_type, selected_area = selected_area)
+        elif selected_option_type != 'All' and selected_market_type == 'All':
+            link = OLX_LINK_SALE_MARKET_TYPE_ALL.format(page_number=2,selected_option_city = selected_option_city,selected_area = selected_area,selected_option_type = selected_option_type)
+        else:
+            link= OLX_LINK_SALE.format(page_number=2,selected_option_city = selected_option_city,selected_option_type = selected_option_type,selected_market_type = selected_market_type,selected_area = selected_area)
     try:
         async with aiohttp.ClientSession() as session:
             async with session.get(
@@ -42,7 +48,7 @@ async def get_num_pages_sale(selected_option_city,selected_option_type,selected_
         logging.error(f"Error while fetching {link}: {e}")
         return 1
 
-async def parse_links_sale(response):
+async def parse_links(response):
     soup = BeautifulSoup(await response.text(), 'html.parser')
     divs = soup.find_all(LINK_DIV_TAG, class_=LINK_DIV_CLASS)
     links = set()
@@ -56,22 +62,27 @@ async def parse_links_sale(response):
                 logging.info(f"Successfully fetched {absolute_url}")
     return links
 
-async def fetch_links_from_page_sale(page_number,selected_option_city,selected_option_type,selected_market_type,selected_area):
-
-    if selected_option_type == 'All' and selected_market_type == 'All':
-        link = OLX_LINK_SALE_ALL.format(page_number=page_number,selected_option_city = selected_option_city,selected_area = selected_area)
-    elif selected_option_type == 'All' and selected_market_type != 'All':
-        link = OLX_LINK_SALE_ALL_CUSTOM.format(page_number=page_number,selected_option_city = selected_option_city, selected_market_type = selected_market_type,selected_area = selected_area)
-    elif selected_option_type != 'All' and selected_market_type == 'All':
-        link = OLX_LINK_SALE_MARKET_TYPE_ALL.format(page_number=page_number,selected_option_city = selected_option_city,selected_area = selected_area,selected_option_type = selected_option_type)
-    else:
-        link = OLX_LINK_SALE.format(page_number=page_number,selected_option_city = selected_option_city,selected_option_type = selected_option_type,selected_market_type = selected_market_type, selected_area = selected_area)
-
+async def fetch_links_from_page(offer_type,page_number,selected_option_city,selected_option_type,selected_market_type,selected_area):
+    if offer_type == 'Rent':
+        if selected_option_type == 'All':
+            link = OLX_LINK_RENT_ALL.format(page_number=page_number,selected_option_city = selected_option_city,selected_area = selected_area)
+        else:
+            link = OLX_LINK_RENT.format(page_number=page_number,selected_option_city = selected_option_city, selected_option_type = selected_option_type ,selected_area = selected_area)
+    if offer_type == 'Sale':
+        if selected_option_type == 'All' and selected_market_type == 'All':
+            link = OLX_LINK_SALE_ALL.format(page_number=page_number,selected_option_city = selected_option_city,selected_option_type = selected_option_type,selected_area = selected_area)
+        elif selected_option_type == 'All' and selected_market_type != 'All':
+            link = OLX_LINK_SALE_ALL_CUSTOM.format(page_number=page_number,selected_option_city = selected_option_city, selected_market_type = selected_market_type,selected_area = selected_area)
+        elif selected_option_type != 'All' and selected_market_type == 'All':
+            link = OLX_LINK_SALE_MARKET_TYPE_ALL.format(page_number=page_number,selected_option_city = selected_option_city,selected_area = selected_area,selected_option_type = selected_option_type)
+        else:
+            link = OLX_LINK_SALE.format(page_number=page_number,selected_option_city = selected_option_city,selected_option_type = selected_option_type,selected_market_type = selected_market_type, selected_area = selected_area)
+    print(link)
     try:
         async with aiohttp.ClientSession() as session:
             async with session.get(link, headers=HEADERS, timeout=TIMEOUT) as response:
                 if response.status == 200:
-                    return await parse_links_sale(response)
+                    return await parse_links(response)
                 else:
                     logging.warning(f"Failed to fetch link {link} - Status code: {response.status}")
                     return set()
@@ -79,7 +90,7 @@ async def fetch_links_from_page_sale(page_number,selected_option_city,selected_o
         logging.error(f"Error while fetching link {link}: {type(e).__name__} - {str(e)}", exc_info=True)
         return set()
     
-async def scrap_data_olx_sale(link,semaphore):
+async def scrap_data_olx(link,semaphore,offer_type):
     async with semaphore: 
         async with aiohttp.ClientSession() as session:
             try:
@@ -87,6 +98,12 @@ async def scrap_data_olx_sale(link,semaphore):
                     if response.status == 200:
                         html = await response.text()
                         soup = BeautifulSoup(html, 'html.parser')
+                        if offer_type == 'Rent':
+                            KEYS = KEYS_RENT
+                        
+                        elif offer_type == 'Sale':
+                            KEYS = KEYS_SALE
+
                         address = [i.text.replace(',', '').replace('Strona główna,Nieruchomości,Mieszkania,Wynajem,Wynajem', '').replace(
                                 'Wynajem', '').replace('Strona główna,Nieruchomości,Mieszkania,, ', '').replace('-', '').replace('Sprzedaż', '').replace(
                                 'Nieruchomości', '').replace('Strona główna', '').replace('Mieszkania', '').replace(',', '').replace(',,,,', '') if i.text != '' else 'No data' for i in soup.find_all(class_=ADRESS_CLASS)]
@@ -103,11 +120,9 @@ async def scrap_data_olx_sale(link,semaphore):
 
                         category_text_list = [i.text if i.text != '' else 'No data' for i in soup.find_all(class_=CATEGORY_CLASS_LIST)]
 
-                        keys = ['Cena za m²','Poziom', 'Umeblowane','Rynek','Rodzaj zabudowy', 'Powierzchnia', 'Liczba pokoi']
 
-
-                        for key in keys:
-                            pattern = re.compile(f'{key}:(.+?)(?={ "|".join(map(re.escape, keys[1:])) }|$)')
+                        for key in KEYS:
+                            pattern = re.compile(f'{key}:(.+?)(?={ "|".join(map(re.escape, KEYS[1:])) }|$)')
                             match = pattern.search(category_text_list[0])
                             data_dict[key] = match.group(1).strip() if match else "No data"
                         logging.info(f"Data successfully scraped from link: {link}")
@@ -119,15 +134,15 @@ async def scrap_data_olx_sale(link,semaphore):
             except Exception as e:
                 logging.error(f"Error while scraping data from link {link}: {type(e).__name__} - {str(e)}", exc_info=True)
 
-async def main_olx_sale(selected_option_city,selected_option_type,selected_market_type,selected_area):
+async def main_olx(offer_type,selected_option_city,selected_option_type,selected_market_type,selected_area):
     semaphore = asyncio.Semaphore(SEMAPHORE_LIMIT)
     try:
-            num_pages = await get_num_pages_sale(selected_option_city,selected_option_type,selected_market_type,selected_area)
-            tasks = [fetch_links_from_page_sale(i,selected_option_city,selected_option_type,selected_market_type,selected_area) for i in range(1, num_pages + 1)]
+            num_pages = await get_num_pages(offer_type,selected_option_city,selected_option_type,selected_market_type,selected_area)
+            tasks = [fetch_links_from_page(offer_type,i,selected_option_city,selected_option_type,selected_market_type,selected_area) for i in range(1, num_pages + 1)]
             results = await asyncio.gather(*tasks)
             scraped_links = set().union(*results)
             logging.info(f"Successfully fetched {len(scraped_links)} URLs")
-            results_scrap_data = await asyncio.gather(*[scrap_data_olx_sale(link,semaphore) for link in scraped_links])
+            results_scrap_data = await asyncio.gather(*[scrap_data_olx(link,semaphore,offer_type) for link in scraped_links])
 
             logging.info(f"Scraped: {len(results_scrap_data)} out of: {len(scraped_links)}")
             

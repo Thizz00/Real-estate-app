@@ -2,7 +2,7 @@ import os
 import pandas as pd
 import asyncio
 from src.otodom_scraper import main_otodom_sale
-from src.olx_scraper import main_olx_sale
+from src.olx_scraper import main_olx
 from config.otodom_config import FOLDER_PATH_OTODOM
 from config.olx_config import FOLDER_PATH_OLX
 from datetime import datetime
@@ -39,18 +39,18 @@ def scrap_data_sale_otodom(offer_type,selected_option_city, number, option_type,
 OLX
 '''
 
-def get_sale_path_olx(folder_path,formatted_date):
+def get_path_olx(folder_path,formatted_date):
     return f'{folder_path}//olx_sale_{formatted_date}.xlsx'
 
 
-def scrap_data_sale_olx(selected_option_city,selected_option_type,selected_market_type,selected_area):
+def scrap_data_olx(offer_type,selected_option_city,selected_option_type,selected_market_type,selected_area):
     today_date = datetime.today()
     formatted_date = today_date.strftime("%Y-%m-%d-%H-%M")
-    result_olx_sale = asyncio.run(main_olx_sale(selected_option_city,selected_option_type,selected_market_type,selected_area))
+    result_olx_sale = asyncio.run(main_olx(offer_type,selected_option_city,selected_option_type,selected_market_type,selected_area))
     result_olx_sale_filtered = [result for result in result_olx_sale if result is not None]
     if result_olx_sale_filtered:
         updated_data_list = [{key: value if value is not None and value != '' else 'No data' for key, value in item.items()} for item in result_olx_sale_filtered]
-        df_olx = save_data_to_excel(updated_data_list,get_sale_path_olx(FOLDER_PATH_OLX,formatted_date))
+        df_olx = save_data_to_excel(updated_data_list,get_path_olx(FOLDER_PATH_OLX,formatted_date))
         return df_olx
     else:
         return None
