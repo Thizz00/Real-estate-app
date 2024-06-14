@@ -77,7 +77,6 @@ async def fetch_links_from_page(offer_type,page_number,selected_option_city,sele
             link = OLX_LINK_SALE_MARKET_TYPE_ALL.format(page_number=page_number,selected_option_city = selected_option_city,selected_area = selected_area,selected_option_type = selected_option_type)
         else:
             link = OLX_LINK_SALE.format(page_number=page_number,selected_option_city = selected_option_city,selected_option_type = selected_option_type,selected_market_type = selected_market_type, selected_area = selected_area)
-    print(link)
     try:
         async with aiohttp.ClientSession() as session:
             async with session.get(link, headers=HEADERS, timeout=TIMEOUT) as response:
