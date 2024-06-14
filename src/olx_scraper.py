@@ -11,8 +11,6 @@ from config.olx_config import *
 
 logging.basicConfig(level=logging.INFO, filename=log_file_path, format='%(asctime)s [%(levelname)s]: %(message)s')
 
-semaphore = asyncio.Semaphore(SEMAPHORE_LIMIT)
-
 async def get_num_pages_sale(selected_option_city,selected_option_type,selected_market_type,selected_area):
     if selected_option_type == 'All' and selected_market_type == 'All':
         link = OLX_LINK_SALE_ALL.format(page_number=2,selected_option_city = selected_option_city,selected_area = selected_area)
@@ -33,6 +31,7 @@ async def get_num_pages_sale(selected_option_city,selected_option_type,selected_
                         soup = BeautifulSoup(await response.text(), 'html.parser')
                         num_pages_element = soup.find_all(NUM_PAGES_TAG, class_=NUM_PAGES_CLASS)[-1]
                         if num_pages_element and num_pages_element.text.isdigit():
+                            print(int(num_pages_element.text))
                             return int(num_pages_element.text)
                         else:
                             logging.warning("Could not find num_pages on the page or it's not a number")
@@ -81,7 +80,6 @@ async def fetch_links_from_page_sale(page_number,selected_option_city,selected_o
         logging.error(f"Error while fetching link {link}: {type(e).__name__} - {str(e)}", exc_info=True)
         return set()
     
-
 async def scrap_data_olx_sale(link,semaphore):
     async with semaphore: 
         async with aiohttp.ClientSession() as session:
