@@ -138,7 +138,7 @@ async def scrap_data_otodom(link,semaphore,offer_type):
             except Exception as e:
                 logging.error(f"Error while scraping data from link {link}: {type(e).__name__} - {str(e)}", exc_info=True)
 
-async def main_otodom_sale(offer_type,selected_option_city, number, option_type, option_market_type, area):
+async def main_otodom(offer_type,selected_option_city, number, option_type, option_market_type, area):
     semaphore = asyncio.Semaphore(SEMAPHORE_LIMIT)
     try:
         num_pages = await get_num_pages(offer_type,selected_option_city, option_market_type, option_type, area, number)

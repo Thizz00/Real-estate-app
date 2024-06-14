@@ -1,5 +1,5 @@
 import streamlit as st
-from utils.preprocessing import scrap_data_sale_otodom
+from utils.preprocessing import scrap_data_otodom
 
 st.markdown(
     "<h1 style='text-align: center; color: white;'>Scraper Otodom</h1>",
@@ -59,7 +59,7 @@ def display_sale_options():
 def start_scraping(offer_type, city_type, area, number, option_type='', option_market_type=''):
     selected_option_city = next(key for key, value in type_display_city.items() if value == city_type)
     with st.spinner("In progress..."):
-        df_otodom = scrap_data_sale_otodom(offer_type, selected_option_city, number, option_type, option_market_type, area)
+        df_otodom = scrap_data_otodom(offer_type, selected_option_city, number, option_type, option_market_type, area)
     if df_otodom is not None:
         st.dataframe(df_otodom, column_config={"Link": st.column_config.LinkColumn()}, hide_index=False)
     else:

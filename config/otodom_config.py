@@ -34,7 +34,9 @@ KEYS_SALE = [
 
 KEYS_RENT = [
         'Powierzchnia', 'Czynsz', 'Liczba pokoi', 'Kaucja', 'Piętro','Miejsce parkingowe', 'Ogrzewanie',
-        'Rynek', 'Typ ogłoszeniodawcy','Wyposażenie','Zabezpieczenia', 'Dostępne od', 'Rok budowy', 'Rodzaj zabudowy','Materiał budynku',
-        'Informacje dodatkowe','Rynek','Certyfikat energetyczny','Media','Okna','Wynajmę również studentom','Rozpoczęcie budowy',
-        'Liczba kondygnacji', 'Stan inwestycji', 'Wysokość pomieszczeń','Bezpieczeństwo', 'Udogodnienia', 'Powierzchnie dodatkowe', 'Wysokość pomieszczeń'
+        'Rynek', 'Typ ogłoszeniodawcy','Wyposażenie','Zabezpieczenia', 'Dostępne od', 'Rok budowy',
+        'Rodzaj zabudowy','Materiał budynku','Informacje dodatkowe','Rynek','Certyfikat energetyczny',
+        'Media','Okna','Wynajmę również studentom','Rozpoczęcie budowy','Liczba kondygnacji',
+        'Stan inwestycji', 'Wysokość pomieszczeń','Bezpieczeństwo', 'Udogodnienia', 'Powierzchnie dodatkowe',
+        'Wysokość pomieszczeń'
         ]
