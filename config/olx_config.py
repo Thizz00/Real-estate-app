@@ -23,4 +23,4 @@ FOLDER_PATH_OLX = 'data/olx'
 
 KEYS_SALE = ['Cena za m²','Poziom', 'Umeblowane','Rynek','Rodzaj zabudowy', 'Powierzchnia', 'Liczba pokoi']
 
-KEYS_RENT = ['Poziom', 'Umeblowane','Rodzaj zabudowy', 'Powierzchnia', 'Liczba pokoi','Czynsz (dodatkowo)','Czynsz(dodatkowo)']
+KEYS_RENT = ['Poziom', 'Umeblowane','Rodzaj zabudowy', 'Powierzchnia', 'Liczba pokoi','Czynsz (dodatkowo)']

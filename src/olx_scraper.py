@@ -120,9 +120,8 @@ async def scrap_data_olx(link,semaphore,offer_type):
 
                         category_text_list = [i.text if i.text != '' else 'No data' for i in soup.find_all(class_=CATEGORY_CLASS_LIST)]
 
-
                         for key in KEYS:
-                            pattern = re.compile(f'{key}:(.+?)(?={ "|".join(map(re.escape, KEYS[1:])) }|$)')
+                            pattern = re.compile(f'{re.escape(key)}:(.+?)(?={"|".join(map(re.escape, KEYS[1:]))}|$)')
                             match = pattern.search(category_text_list[0])
                             data_dict[key] = match.group(1).strip() if match else "No data"
                         logging.info(f"Data successfully scraped from link: {link}")
