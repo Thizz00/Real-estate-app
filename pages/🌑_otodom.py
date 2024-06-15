@@ -62,7 +62,7 @@ def display_sale_options():
     number = st.number_input('Insert a number of days to scrap (max 31 days)', min_value=1, max_value=31, value=1, step=1)
     return city_type, option_type, option_market_type, area, number
 
-def start_scraping(offer_type, city_type, area, number, option_type, option_market_type=''):
+def start_scraping(offer_type, city_type, area, number, option_type, option_market_type):
     with st.spinner("In progress..."):
         df_otodom = scrap_data_otodom(offer_type, city_type, number, option_type, option_market_type, area)
     if df_otodom is not None:
@@ -76,7 +76,7 @@ if offer_type == 'Rent':
         if city_type and option_type and area and number:
             selected_option_city = next(key for key, value in type_display_city.items() if value == city_type)
             selected_option_type_rent = next(key for key, value in type_display_names_rent.items() if value == option_type)
-            start_scraping(offer_type, selected_option_city, area, number,selected_option_type_rent)
+            start_scraping(offer_type, selected_option_city, area, number,selected_option_type_rent,'No data')
         else:
             st.warning("Fill in all fields.")
 elif offer_type == 'Sale':
@@ -86,6 +86,6 @@ elif offer_type == 'Sale':
             selected_option_city = next(key for key, value in type_display_city.items() if value == city_type)
             selected_option_type = next(key for key, value in type_display_names.items() if value == option_type)
             selected_option_market_type = next(key for key, value in market_type_display_names.items() if value == option_market_type)
-            start_scraping(offer_type, city_type, area, number, selected_option_type, selected_option_market_type)
+            start_scraping(offer_type, selected_option_city, area, number, selected_option_type, selected_option_market_type)
         else:
             st.warning("Fill in all fields.")
