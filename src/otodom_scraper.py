@@ -12,10 +12,16 @@ logging.basicConfig(level=logging.INFO, filename=log_file_path, format='%(asctim
 
 async def parse_link_to_get_num_pages_for_firstsite(offer_type,selected_option_city,option_market_type, option_type, area, number):
     if offer_type == 'Rent':
-        base_url = f'{OTODOM_LINK_RENT}&page=1'
-        formatted_url = base_url.format(
-            selected_option_city = selected_option_city, number=number, area=area
-        )
+        if option_type == 'All':
+            base_url = f'{OTODOM_LINK_RENT_OPTION_ALL}&page=1'
+            formatted_url = base_url.format(
+                selected_option_city = selected_option_city, number=number, area=area
+            )
+        else:
+            base_url = f'{OTODOM_LINK_RENT}&page=1'
+            formatted_url = base_url.format(
+                selected_option_city = selected_option_city, number=number, area=area,option_type = option_type
+            )
     elif offer_type == 'Sale':
         base_url = f'{OTODOM_LINK_SALE}&page=1'
         formatted_url = base_url.format(
@@ -78,10 +84,16 @@ async def fetch_links_from_page(link):
 
 async def fetch_page(offer_type,selected_option_city,page_number, number, option_type, option_market_type, area):
     if offer_type == 'Rent':
-        base_url = f'{OTODOM_LINK_RENT}&page={page_number}'
-        formatted_url = base_url.format(
-            selected_option_city = selected_option_city, number=number, area=area
-        )
+        if option_type == 'All':
+            base_url = f'{OTODOM_LINK_RENT_OPTION_ALL}&page={page_number}'
+            formatted_url = base_url.format(
+                selected_option_city = selected_option_city, number=number, area=area
+            )
+        else:
+            base_url = f'{OTODOM_LINK_RENT}&page={page_number}'
+            formatted_url = base_url.format(
+                selected_option_city = selected_option_city, number=number, area=area,option_type = option_type
+            )
     elif offer_type == 'Sale':
         base_url = f'{OTODOM_LINK_SALE}&page={page_number}'
         formatted_url = base_url.format(
