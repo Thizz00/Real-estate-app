@@ -20,7 +20,8 @@ type_display_city = {
     "poznan": "Poznań",
     "rzeszow": "Rzeszów",
     "katowice": "Katowice",
-    "lodz": "Łódź"
+    "lodz": "Łódź",
+    "lublin":"Lublin"
 }
 
 type_display_names = {

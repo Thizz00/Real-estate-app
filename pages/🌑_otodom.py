@@ -26,7 +26,8 @@ type_display_city = {
     "wielkopolskie/poznan/poznan/poznan": "Poznań",
     "podkarpackie/rzeszow/rzeszow/rzeszow": "Rzeszów",
     "slaskie/katowice/katowice/katowice": "Katowice",
-    "lodzkie/lodz/lodz/lodz": "Łódź"
+    "lodzkie/lodz/lodz/lodz": "Łódź",
+    "lubelskie/lublin/lublin/lublin": "Lublin"
 }
 type_display_names = {
     'All': 'All advertisers',
